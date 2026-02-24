@@ -36,7 +36,7 @@ def test_load_from_file_custom_name(base_path):
 
 
 @pytest.mark.parametrize(
-    "ex", [OSError, FileNotFoundError, PermissionError, tomllib.TOMLDecodeError]
+    "ex", [OSError, FileNotFoundError, PermissionError, tomllib.TOMLDecodeError("", "", 0)]
 )
 def test_load_from_file_error_default(base_path, ex):
     with patch("alltoml._file.open", side_effect=ex) as open_mock:
@@ -44,7 +44,7 @@ def test_load_from_file_error_default(base_path, ex):
 
 
 @pytest.mark.parametrize(
-    "ex", [OSError, FileNotFoundError, PermissionError, tomllib.TOMLDecodeError]
+    "ex", [OSError, FileNotFoundError, PermissionError, tomllib.TOMLDecodeError("", "", 0)]
 )
 def test_load_from_file_error_custom_on_failure(base_path, ex):
     on_failure = MagicMock()
