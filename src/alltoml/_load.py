@@ -22,8 +22,14 @@ def load(
     application_name: str,
     application_author: str,
     *,
+    extra_argv: list[str] | None = None,
     default_values: Mapping[str, Any] | None = None,
 ) -> Mapping[str, Any]:
+    if extra_argv is None:
+        argv_on_extra = _argv_on_extra
+    else:
+        argv_on_extra = extra_argv.append
+
     if default_values is None:
         default_values = {}
     else:
@@ -71,7 +77,7 @@ def load(
     )
     cwd_file_settings = load_from_file(Path("."), on_failure=_file_on_failure)
     environ_settings = load_from_environ(prefix=environ_prefix, on_failure=_environ_on_failure)
-    argv_settings = load_from_argv(argv, on_extra=_argv_on_extra, on_failure=_argv_on_failure)
+    argv_settings = load_from_argv(argv, on_extra=argv_on_extra, on_failure=_argv_on_failure)
 
     return DeepChainMap(
         argv_settings,

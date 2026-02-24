@@ -166,6 +166,36 @@ def test_load(
     assert settings.maps[-1] is not default_values
 
 
+@pytest.mark.parametrize(
+    "argv, expected_extra_argv, expected_argv_settings",
+    [
+        (["test", "not-a-config-value", "--config.x", "123"], ["not-a-config-value"], {"x": 123}),
+        (["test"], [], {}),
+        (["test", "a", "--config.x", "123", "b"], ["a", "b"], {"x": 123}),
+    ],
+)
+def test_load_extra_argv(argv, expected_extra_argv, expected_argv_settings):
+    extra_argv = []
+
+    with (
+        patch("alltoml._load.load_from_environ") as load_from_environ_mock,
+        patch("alltoml._load.load_from_file") as load_from_file_mock,
+        patch.object(sys, "argv", argv),
+    ):
+        settings = load("a", "b", extra_argv=extra_argv)
+
+    assert isinstance(settings, DeepChainMap)
+    assert settings.maps == [
+        expected_argv_settings,
+        {},
+        load_from_file_mock.return_value,
+        load_from_file_mock.return_value,
+        load_from_environ_mock.return_value,
+        {},
+    ]
+    assert extra_argv == expected_extra_argv
+
+
 def test_load_invalid_config_argv(caplog):
     caplog.set_level(logging.INFO)
     with patch.object(sys, "argv", ["test", "--config"]):

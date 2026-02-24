@@ -13,6 +13,7 @@ def load(
     application_name: str,
     application_author: str,
     *,
+    extra_argv: list[str] | None = None,
     default_values: Mapping[str, Any] | None = None,
 ) -> Mapping[str, Any]:
     ...
@@ -22,9 +23,11 @@ def load(
 
 It first prioritizes values provided on the command line. This follows the behavior of
 [alltoml.load_from_argv](#load_from_argv). Arguments should be prefixed with `--config.` to
-appear in the output. Unexpected arguments (ones not prefixed with `--config.`) will cause the
-program to exit with an error code of `1` and an error message. If there is a problem parsing an
-argument then a warning is emitted and it is ignored.
+appear in the output. If `extra_argv` is supplied a list, then that list will be mutated and any
+unexpected arguments (ones not prefixed with `--config.`) will be added to the list. If no list is
+supplied then unexpected arguments  will cause the program to exit with an error code of `1` and an
+error message. If there is a problem parsing an argument then a warning is emitted and it is
+ignored.
 
 Next a user specified config toml file is consulted. The file path may be specified using either an
 environment variable or command line argument. The environment variable takes the form
