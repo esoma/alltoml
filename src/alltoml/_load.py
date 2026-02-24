@@ -22,13 +22,13 @@ def load(
     application_name: str,
     application_author: str,
     *,
-    default_settings: Mapping[str, Any] | None = None,
+    default_values: Mapping[str, Any] | None = None,
 ) -> Mapping[str, Any]:
-    if default_settings is None:
-        default_settings = {}
+    if default_values is None:
+        default_values = {}
     else:
-        default_settings = {**default_settings}
-    assert isinstance(default_settings, dict)
+        default_values = {**default_values}
+    assert isinstance(default_values, dict)
 
     if application_name.strip():
         base_env_prefix = re.sub(r"[\-\s_]+", "_", application_name.strip()).upper()
@@ -79,7 +79,7 @@ def load(
         cwd_file_settings,
         user_file_settings,
         environ_settings,
-        default_settings,
+        default_values,
     )
 
 

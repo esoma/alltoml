@@ -13,7 +13,7 @@ def load(
     application_name: str,
     application_author: str,
     *,
-    default_settings: Mapping[str, Any] | None = None,
+    default_values: Mapping[str, Any] | None = None,
 ) -> Mapping[str, Any]:
     ...
 ```
@@ -46,7 +46,7 @@ Next environment variables are consulted. This follows the behavior of
 `<APPLICATION_NAME>_CONFIG.` (or just `CONFIG.` if `application_name` is an empty string). If there
 is a problem parsing an environment variable then a warning is emitted and it is ignored.
 
-Finally, the `default_settings` are used.
+Finally, the `default_values` are used.
 
 Note that nested mappings (objects/dicts) will transparently merge together in the order described
 above. So if you have a default of:

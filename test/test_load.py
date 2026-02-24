@@ -65,7 +65,7 @@ def test_argv_on_failure(caplog):
 @pytest.mark.parametrize("application_author", ["a", "b"])
 @pytest.mark.parametrize("argv_config", [None, "myconfig.toml", "dir/myconf.toml"])
 @pytest.mark.parametrize("environ_config", [None, "myenvconfig.toml", "dir2/myenvconf.toml"])
-@pytest.mark.parametrize("default_settings", [None, {"a": "b"}])
+@pytest.mark.parametrize("default_values", [None, {"a": "b"}])
 def test_load(
     application_name,
     application_author,
@@ -73,14 +73,14 @@ def test_load(
     environ_config_key,
     argv_config,
     environ_config,
-    default_settings,
+    default_values,
 ):
     argv = ["test"]
     environ = {}
 
-    expected_default_settings = {}
-    if default_settings is not None:
-        expected_default_settings = {**default_settings}
+    expected_default_values = {}
+    if default_values is not None:
+        expected_default_values = {**default_values}
 
     file_settings = {}
     if environ_config:
@@ -120,8 +120,8 @@ def test_load(
         patch.object(os, "environ", environ),
     ):
         kwargs = {}
-        if default_settings is not None:
-            kwargs["default_settings"] = default_settings
+        if default_values is not None:
+            kwargs["default_values"] = default_values
         settings = load(application_name, application_author, **kwargs)
 
     load_from_environ_mock.assert_called_once_with(
@@ -161,9 +161,9 @@ def test_load(
         cwd_file_settings,
         user_file_settings,
         load_from_environ_mock.return_value,
-        expected_default_settings,
+        expected_default_values,
     ]
-    assert settings.maps[-1] is not default_settings
+    assert settings.maps[-1] is not default_values
 
 
 def test_load_invalid_config_argv(caplog):
